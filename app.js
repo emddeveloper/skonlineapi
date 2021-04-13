@@ -1,5 +1,12 @@
 var express = require("express")
 var app = express()
+var cors = require("cors")
+
+app.use(cors())
+
+app.get("/records/:id", function (req, res, next) {
+  res.json({ msg: "This is CORS-enabled for all origins!" + req })
+})
 
 app.get("/", function (req, res) {
   res.send("Hello world!")
