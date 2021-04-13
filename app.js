@@ -38,5 +38,5 @@ app.get("/records", function (req, res) {
   res.send([{ id: "1", timestamp: 1618228109367, cash: 5000, jio: 5000, bank: 5000, credit: "", profit: 78, total: 35 }])
 })
 
-const port = process.env.PORT || 4000
+const port = process.env.PORT
 app.listen(port)
