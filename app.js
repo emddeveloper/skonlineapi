@@ -4,7 +4,7 @@ var cors = require("cors")
 
 const mysql = require("mysql")
 const bodyParser = require("body-parser")
-
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.options("*", cors()) // include before other routes
 
@@ -39,9 +39,15 @@ app.get("/latest", (req, res) => {
 })
 //Post a record or insert a record
 app.post("/addrecord", (req, res) => {
-  console.log("Got body:", req.body)
-  res.sendStatus(200)
-  res.send(req.body)
+  pool.getConnection((err, connection) => {
+    var data = req.body
+    var sql = `INSERT INTO skonlinedb (cash,jio,bank,credit,total,profit,timestamp) VALUES ("'+data.cash+'","'+data.jio+'","'+data.bank+'","'+data.credit+'","'+data.total+'","'+data.profit+'","'+data.timestamp+'")`
+    connection.query(sql, (err, rows) => {
+      connection.release() // return the connection to pool
+      if (err) throw err
+      res.send(rows)
+    })
+  })
 })
 const port = process.env.PORT || 4000
 app.listen(port)
