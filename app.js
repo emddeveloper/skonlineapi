@@ -37,6 +37,11 @@ app.get("/latest", (req, res) => {
     })
   })
 })
-
+//Post a record or insert a record
+app.post("/addrecord", (req, res) => {
+  console.log("Got body:", req.body)
+  res.sendStatus(200)
+  res.send(req.body)
+})
 const port = process.env.PORT || 4000
 app.listen(port)
