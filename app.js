@@ -7,36 +7,36 @@ const bodyParser = require("body-parser")
 
 app.use(cors())
 app.options("*", cors()) // include before other routes
-const connection = mysql.createConnection({
+
+const pool = mysql.createPool({
   host: "sql328.main-hosting.eu",
   user: "u769955481_mybalance",
   password: "mybalance@123",
   database: "u769955481_mybalance"
 })
-connection.connect(function (error) {
-  if (!!error) console.log(error)
-  else console.log("Database Connected!")
-})
-app.get("/records/:id", function (req, res, next) {
-  res.json({ msg: "This is CORS-enabled for all origins!" + req })
-})
 
-//Creating GET Router to fetch all the learner details from the MySQL Database
-app.get("/", (req, res) => {
-  connection.query("SELECT * FROM skonlinedb", (err, rows, fields) => {
-    if (!err) res.send(rows)
-    else console.log(err)
+app.get("/records", (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (err) throw err
+    console.log("connected as id " + connection.threadId)
+    connection.query("SELECT * FROM skonlinedb", (err, rows) => {
+      connection.release() // return the connection to pool
+      if (err) throw err
+      res.send(rows)
+    })
   })
 })
 app.get("/latest", (req, res) => {
-  connection.query("SELECT * FROM skonlinedb ORDER BY id DESC LIMIT 1", (err, rows, fields) => {
-    if (!err) res.send(rows)
-    else console.log(err)
+  pool.getConnection((err, connection) => {
+    if (err) throw err
+    console.log("connected as id " + connection.threadId)
+    connection.query("SELECT * FROM skonlinedb ORDER BY id DESC LIMIT 1", (err, rows) => {
+      connection.release() // return the connection to pool
+      if (err) throw err
+      res.send(rows)
+    })
   })
 })
-app.get("/records", function (req, res) {
-  res.send([{ id: "1", timestamp: 1618228109367, cash: 5000, jio: 5000, bank: 5000, credit: "", profit: 78, total: 35 }])
-})
 
-const port = process.env.PORT
+const port = process.env.PORT || 4000
 app.listen(port)
