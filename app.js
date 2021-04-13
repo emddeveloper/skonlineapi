@@ -21,8 +21,18 @@ app.get("/records/:id", function (req, res, next) {
   res.json({ msg: "This is CORS-enabled for all origins!" + req })
 })
 
-app.get("/", function (req, res) {
-  res.send("Hello world!")
+//Creating GET Router to fetch all the learner details from the MySQL Database
+app.get("/", (req, res) => {
+  connection.query("SELECT * FROM skonlinedb", (err, rows, fields) => {
+    if (!err) res.send(rows)
+    else console.log(err)
+  })
+})
+app.get("/latetrecords", (req, res) => {
+  connection.query("SELECT * FROM skonlinedb ORDER BY id DESC LIMIT 1", (err, rows, fields) => {
+    if (!err) res.send(rows)
+    else console.log(err)
+  })
 })
 app.get("/records", function (req, res) {
   res.send([{ id: "1", timestamp: 1618228109367, cash: 5000, jio: 5000, bank: 5000, credit: "", profit: 78, total: 35 }])
