@@ -6,7 +6,7 @@ const mysql = require("mysql")
 const bodyParser = require("body-parser")
 
 app.use(cors())
-
+app.options("*", cors()) // include before other routes
 const connection = mysql.createConnection({
   host: "sql328.main-hosting.eu",
   user: "u769955481_mybalance",
