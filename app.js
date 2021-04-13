@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
     else console.log(err)
   })
 })
-app.get("/latetrecords", (req, res) => {
+app.get("/latest", (req, res) => {
   connection.query("SELECT * FROM skonlinedb ORDER BY id DESC LIMIT 1", (err, rows, fields) => {
     if (!err) res.send(rows)
     else console.log(err)
