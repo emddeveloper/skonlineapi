@@ -12,9 +12,9 @@ app.use(express.json())
 
 const pool = mysql.createPool({
   host: process.env.host,
-  user: "u769955481_mybalance",
-  password: "mybalance@123",
-  database: "u769955481_mybalance",
+  user: process.env.user,
+  password: process.env.password,
+  database: process.env.database,
   connectionLimit: 10
 })
 
