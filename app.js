@@ -49,11 +49,13 @@ app.post("/addrecord", (req, res) => {
   reqData.push(req.body.credit)
   reqData.push(req.body.total)
   reqData.push(req.body.profit)
+  reqData.push(req.body.profitref)
+  reqData.push(req.body.profitrefdate)
   reqData.push(req.body.timestamp)
   pool.getConnection((err, connection) => {
     if (err) throw err
     console.log("connected as id " + connection.threadId)
-    var sql = "INSERT INTO skonlinedb (cash,jio,bank,credit,total,profit,timestamp) VALUES (?,?,?,?,?,?,?)"
+    var sql = "INSERT INTO skonlinedb (cash,jio,bank,credit,total,profit,profitref,profitrefdate,timestamp) VALUES (?,?,?,?,?,?,?,?,?)"
     connection.query(sql, reqData, (err, rows) => {
       connection.release() // return the connection to pool
       if (err) throw err
@@ -61,5 +63,20 @@ app.post("/addrecord", (req, res) => {
     })
   })
 })
+setInterval(
+  () =>
+    alert(
+      pool.getConnection((err, connection) => {
+        if (err) throw err
+        console.log("connected as id " + connection.threadId)
+        connection.query("SELECT * FROM skonlinedb", (err, rows) => {
+          connection.release() // return the connection to pool
+          if (err) throw err
+          res.send(rows)
+        })
+      })
+    ),
+  1000 * 60 * 15
+)
 const port = process.env.PORT || 4000
 app.listen(port)
