@@ -1,7 +1,7 @@
 var express = require("express")
 var app = express()
 var cors = require("cors")
-
+require("dotenv").config()
 const mysql = require("mysql")
 const bodyParser = require("body-parser")
 app.use(bodyParser.json())
@@ -11,7 +11,7 @@ app.options("*", cors()) // include before other routes
 app.use(express.json())
 
 const pool = mysql.createPool({
-  host: "sql328.main-hosting.eu",
+  host: process.env.host,
   user: "u769955481_mybalance",
   password: "mybalance@123",
   database: "u769955481_mybalance",
