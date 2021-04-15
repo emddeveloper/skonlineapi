@@ -5,9 +5,10 @@ require("dotenv").config()
 const mysql = require("mysql")
 const bodyParser = require("body-parser")
 app.use(bodyParser.json())
-app.use(cors())
-app.options("*", cors()) // include before other routes
-
+var corsOptions = {
+  origin: "https://angular.emddeveloper.com/",
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 app.use(express.json())
 const pool = mysql.createPool({
   host: process.env.myhost,
@@ -28,7 +29,8 @@ app.get("/records", (req, res) => {
     })
   })
 })
-app.get("/latest", cors(), (req, res) => {
+var corsOptions = {
+app.get("/latest", cors(corsOptions), (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) throw err
     console.log("connected as id " + connection.threadId)
