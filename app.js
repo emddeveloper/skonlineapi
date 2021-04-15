@@ -64,18 +64,16 @@ app.post("/addrecord", (req, res) => {
 })
 setInterval(
   () =>
-    alert(
-      pool.getConnection((err, connection) => {
+    pool.getConnection((err, connection) => {
+      if (err) throw err
+      console.log("connected as id " + connection.threadId)
+      connection.query("SELECT * FROM skonlinedb", (err, rows) => {
+        connection.release() // return the connection to pool
         if (err) throw err
-        console.log("connected as id " + connection.threadId)
-        connection.query("SELECT * FROM skonlinedb", (err, rows) => {
-          connection.release() // return the connection to pool
-          if (err) throw err
-          res.send(rows)
-        })
+        console.log("data " + rows)
       })
-    ),
-  1000 * 60 * 15
+    }),
+  1000 * 60 * 25
 )
 const port = process.env.PORT || 4000
 app.listen(port)
