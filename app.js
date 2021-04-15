@@ -22,7 +22,7 @@ app.get("/records", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) throw err
     console.log("connected as id " + connection.threadId)
-    connection.query("SELECT * FROM skonlinedb ORDER BY id DESC", (err, rows) => {
+    connection.query("SELECT * FROM skonlinedb ORDER BY id DESC LIMIT 9", (err, rows) => {
       connection.release() // return the connection to pool
       if (err) throw err
       res.send(rows)
