@@ -28,7 +28,7 @@ app.get("/records", (req, res) => {
     })
   })
 })
-app.get("/latest", (req, res) => {
+app.get("/latest", cors(), (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) throw err
     console.log("connected as id " + connection.threadId)
