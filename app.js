@@ -9,9 +9,8 @@ app.use(cors())
 app.options("*", cors()) // include before other routes
 
 app.use(express.json())
-
 const pool = mysql.createPool({
-  host: process.env.host,
+  host: process.env.myhost,
   user: process.env.user,
   password: process.env.password,
   database: process.env.database,
@@ -22,7 +21,7 @@ app.get("/records", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) throw err
     console.log("connected as id " + connection.threadId)
-    connection.query("SELECT * FROM skonlinedb", (err, rows) => {
+    connection.query("SELECT * FROM skonlinedb ORDER BY id DESC", (err, rows) => {
       connection.release() // return the connection to pool
       if (err) throw err
       res.send(rows)
